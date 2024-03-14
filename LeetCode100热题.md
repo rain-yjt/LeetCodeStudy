@@ -300,3 +300,22 @@ public:
 };
 ```
 
+### 3.无重复字符的最长子串
+
+```c++
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        vector<int> pos(128, -1);
+        int ret = 0;
+        // j指向左边界,i指向右边界
+        for (int i = 0, j = 0; i < s.length(); ++i) {
+            j = max(pos[s[i]] + 1, j);
+            ret = max(ret, i - j + 1);
+            pos[s[i]] = i;
+        }
+        return ret;
+    }
+};
+```
+
