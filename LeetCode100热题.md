@@ -300,6 +300,8 @@ public:
 };
 ```
 
+## 滑动窗口
+
 ### 3.无重复字符的最长子串
 
 ```c++
@@ -313,6 +315,54 @@ public:
             j = max(pos[s[i]] + 1, j);
             ret = max(ret, i - j + 1);
             pos[s[i]] = i;
+        }
+        return ret;
+    }
+};
+```
+
+滑动窗口加哈希表：
+
+```c++
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        unordered_map<char, int> dic;
+        int i = -1, res = 0, len = s.size();
+        for (int j = 0; j < len; j++) {
+            if (dic.find(s[j]) != dic.end())
+                i = max(i, dic.find(s[j])->second); // 更新左指针
+            dic[s[j]] = j;                          // 哈希表记录
+            res = max(res, j - i);                  // 更新结果
+        }
+        return res;
+    }
+};
+```
+
+### 438.找到字符串中所有字母异位词
+
+```c++
+class Solution {
+public:
+    vector<int> findAnagrams(string s, string p) {
+        int slen = s.size(), plen = p.size();
+        vector<int> pcount(26, 0);
+        vector<int> scount(26, 0);
+        vector<int> ret;
+        if (slen < plen) {
+            return {};
+        }
+        for (auto c : p)
+            pcount[c - 'a']++;
+        for (int i = 0; i < slen; ++i) {
+            scount[s[i] - 'a']++;
+            if (i >= plen) {
+                scount[s[i - plen] - 'a']--;
+            }
+            if (pcount == scount) {
+                ret.push_back(i - plen + 1);
+            }
         }
         return ret;
     }
